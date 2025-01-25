@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKILL EMPLOY Dashboard</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, rgba(255, 105, 180, 0.5), rgba(70, 130, 180, 0.5)), url('https://source.unsplash.com/1600x900/?nature,landscape') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container, .dashboard-container {
+            background-color: #ffffff;
+            padding: 30px;
+            margin: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            transition: transform 0.3s ease-in-out;
+        }
+        h1, h2 {
+            text-align: center;
+            font-weight: 600;
+            background: -webkit-linear-gradient(#ff7f50, #ff6347, #ff1493);
+            -webkit-background-clip: text;
+            color: transparent;
+            font-size: 32px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        h3 {
+            color: #4CAF50;
+            margin: 0;
+            font-weight: 500;
+        }
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+        }
+        input:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+        .login-container input[type="submit"] {
+            background-color: #5c6bc0;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .login-container input[type="submit"]:hover {
+            background-color: #3f51b5;
+        }
+        .income-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .income-box {
+            background-color: #e1f5fe;
+            padding: 20px;
+            border-radius: 12px;
+            width: 30%;
+            text-align: center;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .income-box:hover {
+            transform: translateY(-5px);
+        }
+        .income-box h3 {
+            font-size: 18px;
+            color: #0277bd;
+            margin-bottom: 10px;
+        }
+        .income-box p {
+            font-size: 22px;
+            color: #0288d1;
+            font-weight: 600;
+        }
+        .profile-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .profile-section p {
+            color: #777;
+            font-size: 16px;
+        }
+        .profile-name {
+            background: -webkit-linear-gradient(#ff7f50, #ff6347, #ff1493);
+            -webkit-background-clip: text;
+            color: transparent;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .edit-btn {
+            background-color: #81c784;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 5px 12px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .edit-btn:hover {
+            background-color: #66bb6a;
+        }
+        .logout-button {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 12px;
+            background-color: #ff7043;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .logout-button:hover {
+            background-color: #ff5722;
+        }
+        .dashboard-container {
+            display: none;
+        }
+        .login-container input[type="submit"]:focus, .logout-button:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Form -->
+    <div id="loginPage" class="login-container">
+        <h1>Login</h1>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <input type="submit" value="Login">
+        </form>
+        <p style="text-align: center; color: #555;">Don't have an account? <a href="#" style="color: #5c6bc0; text-decoration: none;">Sign Up</a></p>
+    </div>
+
+    <!-- Dashboard Page (Hidden Initially) -->
+    <div id="dashboardPage" class="dashboard-container">
+        <h1>SKILL EMPLOY Dashboard</h1>
+        
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <h2>Welcome, <strong><span id="profileName" class="profile-name"></span></strong></h2>
+            <p>Your profile information and earnings are shown below.</p>
+            <button class="edit-btn" id="editProfileBtn" onclick="editProfile()">Edit Profile</button>
+            <div id="profileEditSection" style="display: none; margin-top: 10px;">
+                <input type="text" id="editProfileName" value="" placeholder="Edit your name">
+                <button class="edit-btn" onclick="saveProfile()">Save</button>
+            </div>
+        </div>
+
+        <!-- Income Information Section -->
+        <div class="income-section">
+            <div class="income-box">
+                <h3>Today's Income</h3>
+                <p id="todaysIncome">₹150</p>
+                <button class="edit-btn" id="editTodaysIncomeBtn" onclick="editIncome('todaysIncome')">Edit</button>
+                <div id="todaysIncomeEdit" style="display: none; margin-top: 10px;">
+                    <input type="number" id="todaysIncomeInput" value="150" placeholder="Enter income">
+                    <button class="edit-btn" onclick="saveIncome('todaysIncome')">Save</button>
+                </div>
+            </div>
+            <div class="income-box">
+                <h3>7-Day Income</h3>
+                <p id="sevenDayIncome">₹950</p>
+                <button class="edit-btn" id="editSevenDayIncomeBtn" onclick="editIncome('sevenDayIncome')">Edit</button>
+                <div id="sevenDayIncomeEdit" style="display: none; margin-top: 10px;">
+                    <input type="number" id="sevenDayIncomeInput" value="950" placeholder="Enter income">
+                    <button class="edit-btn" onclick="saveIncome('sevenDayIncome')">Save</button>
+                </div>
+            </div>
+            <div class="income-box">
+                <h3>30-Day Income</h3>
+                <p id="thirtyDayIncome">₹4200</p>
+                <button class="edit-btn" id="editThirtyDayIncomeBtn" onclick="editIncome('thirtyDayIncome')">Edit</button>
+                <div id="thirtyDayIncomeEdit" style="display: none; margin-top: 10px;">
+                    <input type="number" id="thirtyDayIncomeInput" value="4200" placeholder="Enter income">
+                    <button class="edit-btn" onclick="saveIncome('thirtyDayIncome')">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Income Section -->
+        <div class="income-box" style="margin-top: 20px;">
+            <h3>Total Income</h3>
+            <p id="totalIncome">₹5400</p>
+            <button class="edit-btn" id="editTotalIncomeBtn" onclick="editIncome('totalIncome')">Edit</button>
+            <div id="totalIncomeEdit" style="display: none; margin-top: 10px;">
+                <input type="number" id="totalIncomeInput" value="5400" placeholder="Enter income">
+                <button class="edit-btn" onclick="saveIncome('totalIncome')">Save</button>
+            </div>
+        </div>
+
+        <!-- Logout Button -->
+        <button class="logout-button" onclick="handleLogout()">Logout</button>
+    </div>
+
+    <script>
+        // Simulated user data (multiple users)
+        const usersData = {
+            "admin": {
+                username: "admin", 
+                password: "Sachin@2006", 
+                role: "admin", 
+                profileName: "Admin User",
+                todaysIncome: 150,
+                sevenDayIncome: 950,
+                thirtyDayIncome: 4200,
+                totalIncome: 5400
+            },
+            "user1": {
+                username: "user1", 
+                password: "Dilip@2008", 
+                role: "user", 
+                profileName: "DILIP SAINI",
+                todaysIncome: 10,
+                sevenDayIncome: 90,
+                thirtyDayIncome: 400,
+                totalIncome: 540
+            },
+        };
+
+        let currentUser = null;
+
+        // Function to handle login
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (usersData[username] && usersData[username].password === password) {
+                currentUser = usersData[username];
+
+                document.getElementById("loginPage").style.display = "none";
+                document.getElementById("dashboardPage").style.display = "block";
+
+                document.getElementById("profileName").textContent = currentUser.profileName;
+                document.getElementById("todaysIncome").textContent = `₹${currentUser.todaysIncome}`;
+                document.getElementById("sevenDayIncome").textContent = `₹${currentUser.sevenDayIncome}`;
+                document.getElementById("thirtyDayIncome").textContent = `₹${currentUser.thirtyDayIncome}`;
+                document.getElementById("totalIncome").textContent = `₹${currentUser.totalIncome}`;
+
+                if (currentUser.role === "admin") {
+                    document.getElementById("editProfileBtn").style.display = "inline-block";
+                    document.getElementById("editTodaysIncomeBtn").style.display = "inline-block";
+                    document.getElementById("editSevenDayIncomeBtn").style.display = "inline-block";
+                    document.getElementById("editThirtyDayIncomeBtn").style.display = "inline-block";
+                    document.getElementById("editTotalIncomeBtn").style.display = "inline-block";
+                } else {
+                    document.getElementById("editProfileBtn").style.display = "none";
+                    document.getElementById("editTodaysIncomeBtn").style.display = "none";
+                    document.getElementById("editSevenDayIncomeBtn").style.display = "none";
+                    document.getElementById("editThirtyDayIncomeBtn").style.display = "none";
+                    document.getElementById("editTotalIncomeBtn").style.display = "none";
+                }
+            } else {
+                alert("Invalid username or password");
+            }
+        }
+
+        // Function to handle logout
+        function handleLogout() {
+            currentUser = null;
+            document.getElementById("loginPage").style.display = "block";
+            document.getElementById("dashboardPage").style.display = "none";
+        }
+
+        // Function to edit profile name
+        function editProfile() {
+            document.getElementById("profileEditSection").style.display = "block";
+            document.getElementById("editProfileName").value = currentUser.profileName;
+        }
+
+        // Function to save edited profile name
+        function saveProfile() {
+            const newProfileName = document.getElementById("editProfileName").value;
+            currentUser.profileName = newProfileName;
+            document.getElementById("profileName").textContent = currentUser.profileName;
+            document.getElementById("profileEditSection").style.display = "none";
+        }
+
+        // Function to edit income values
+        function editIncome(incomeType) {
+            document.getElementById(`${incomeType}Edit`).style.display = "block";
+            document.getElementById(`${incomeType}Input`).value = currentUser[incomeType];
+        }
+
+        // Function to save edited income values
+        function saveIncome(incomeType) {
+            const newIncomeValue = document.getElementById(`${incomeType}Input`).value;
+            currentUser[incomeType] = newIncomeValue;
+            document.getElementById(`${incomeType}`).textContent = `₹${newIncomeValue}`;
+            document.getElementById(`${incomeType}Edit`).style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
+ 
